@@ -16,6 +16,7 @@ import {
   Sparkles,
   BookOpen,
   FolderOpen,
+  PackageSearch,
 } from 'lucide-react';
 
 export default function Header() {
@@ -74,6 +75,12 @@ export default function Header() {
               >
                 Resources
               </Link>
+              <Link
+                href="/lost-found"
+                className="text-sm font-medium text-zinc-300 transition-colors duration-150 hover:text-white active:scale-95"
+              >
+                Lost & Found
+              </Link>
             </nav>
           </div>
 
@@ -97,11 +104,10 @@ export default function Header() {
                   <Link
                     href="/my-events"
                     title="My Events"
-                    className="flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
+                    className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
                   >
                     <Calendar className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                    <span className="hidden sm:inline">My Events</span>
-                    <span className="sm:hidden">My Events</span>
+                    My Events
                   </Link>
                 )}
 
@@ -111,7 +117,16 @@ export default function Header() {
                   className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
                 >
                   <FolderOpen className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                  <span className="hidden sm:inline">My Resources</span>
+                  My Resources
+                </Link>
+
+                <Link
+                  href="/my-posts"
+                  title="My Posts"
+                  className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
+                >
+                  <PackageSearch className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                  My Posts
                 </Link>
 
                 {/* Profile - desktop only in header to prevent crowding on mobile */}
@@ -163,7 +178,7 @@ export default function Header() {
 
       {/* Mobile Sidebar Overlay & Drawer */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 hidden">
           {/* Backdrop blur */}
           <div
             className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
@@ -255,6 +270,18 @@ export default function Header() {
                   <ChevronRight className="h-4 w-4 text-zinc-600" />
                 </Link>
 
+                <Link
+                  href="/lost-found"
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-200 transition-all hover:bg-zinc-800/60 hover:text-white"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <PackageSearch className="h-4 w-4 text-red-500" />
+                    Lost & Found
+                  </span>
+                  <ChevronRight className="h-4 w-4 text-zinc-600" />
+                </Link>
+
                 {user?.role === 'club_admin' && (
                   <Link
                     href="/event-dashboard"
@@ -292,6 +319,20 @@ export default function Header() {
                     <span className="flex items-center gap-2.5">
                       <FolderOpen className="h-4 w-4 text-zinc-400" />
                       My Shared Resources
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-zinc-600" />
+                  </Link>
+                )}
+
+                {user && (
+                  <Link
+                    href="/my-posts"
+                    onClick={() => setSidebarOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-200 transition-all hover:bg-zinc-800/60 hover:text-white"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <PackageSearch className="h-4 w-4 text-zinc-400" />
+                      My Lost & Found Posts
                     </span>
                     <ChevronRight className="h-4 w-4 text-zinc-600" />
                   </Link>

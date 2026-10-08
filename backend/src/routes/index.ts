@@ -5,6 +5,7 @@ import eventRoutes from './event.routes.js';
 import clubAdminRoutes from './clubAdmin.routes.js';
 import checkinRoutes from './checkin.routes.js';
 import resourceRoutes from './resource.routes.js';
+import lostFoundRoutes from './lostFound.routes.js';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use('/events', eventRoutes);
 router.use('/club-admin', clubAdminRoutes);
 router.use('/check-in', checkinRoutes);
 router.use('/resources', resourceRoutes);
+router.use('/lost-found', lostFoundRoutes);
 
 export default router;
