@@ -36,6 +36,7 @@ export default function EventDetailPage({
   const [showQrModal, setShowQrModal] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     async function loadEvent() {
       try {
         setLoading(true);

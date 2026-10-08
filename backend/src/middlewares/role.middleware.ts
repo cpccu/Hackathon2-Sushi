@@ -27,3 +27,15 @@ export const requireClubAdmin = (req: Request, _res: Response, next: NextFunctio
 
   next();
 };
+
+export const requireHelpdeskAdmin = (req: Request, _res: Response, next: NextFunction): void => {
+  if (!req.user) {
+    return next(new UnauthorizedError('Authentication required'));
+  }
+
+  if (req.user.role !== 'helpdesk_admin') {
+    return next(new ForbiddenError('Access restricted to Helpdesk Admins only'));
+  }
+
+  next();
+};

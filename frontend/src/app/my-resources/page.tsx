@@ -99,8 +99,8 @@ export default function MyResourcesPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
       </div>
     );
   }
@@ -110,10 +110,6 @@ export default function MyResourcesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-zinc-800/80 pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-400">
-            <FolderOpen className="h-3.5 w-3.5" />
-            <span>My Contributions</span>
-          </div>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             My Released Resources
           </h1>
@@ -163,13 +159,12 @@ export default function MyResourcesPage() {
                   <div className="flex items-center gap-1.5 text-xs">
                     <span className="text-zinc-500 text-[11px]">Score:</span>
                     <span
-                      className={`font-bold text-xs ${
-                        item.vote_score > 0
+                      className={`font-bold text-xs ${item.vote_score > 0
                           ? 'text-emerald-400'
                           : item.vote_score < 0
-                          ? 'text-red-400'
-                          : 'text-zinc-400'
-                      }`}
+                            ? 'text-red-400'
+                            : 'text-zinc-400'
+                        }`}
                     >
                       {item.vote_score}
                     </span>

@@ -6,6 +6,8 @@ import clubAdminRoutes from './clubAdmin.routes.js';
 import checkinRoutes from './checkin.routes.js';
 import resourceRoutes from './resource.routes.js';
 import lostFoundRoutes from './lostFound.routes.js';
+import helpdeskRoutes from './helpdesk.routes.js';
+import complaintRoutes from './complaint.routes.js';
 
 const router = Router();
 
@@ -16,5 +18,7 @@ router.use('/club-admin', clubAdminRoutes);
 router.use('/check-in', checkinRoutes);
 router.use('/resources', resourceRoutes);
 router.use('/lost-found', lostFoundRoutes);
+router.use('/helpdesk', helpdeskRoutes);
+router.use('/complaints', complaintRoutes);
 
 export default router;

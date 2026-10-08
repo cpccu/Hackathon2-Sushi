@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import ScrollToTop from '../components/common/ScrollToTop';
 import { AuthProvider } from '../context/AuthContext';
 import { Toaster } from 'sonner';
 
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="flex min-h-screen flex-col bg-[#09090b] text-zinc-100 antialiased selection:bg-red-500 selection:text-white">
+        <ScrollToTop />
         <AuthProvider>
           <Header />
           <main className="flex-1">{children}</main>

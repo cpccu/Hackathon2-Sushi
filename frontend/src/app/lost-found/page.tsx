@@ -102,38 +102,29 @@ export default function LostFoundBrowsePage() {
   }, [fetchPosts]);
 
   return (
-    <div className="min-h-screen bg-[#09090b] pb-16">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden border-b border-zinc-800 bg-gradient-to-b from-zinc-900/80 via-zinc-900/30 to-[#09090b] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-
-              <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
-                Lost & Found Hub
-              </h1>
-              <p className="mt-2 text-sm text-zinc-400 sm:text-base max-w-2xl">
-                Misplaced an item or picked up someone's belongings? Search the live registry or file a report with photo verification.
-              </p>
-            </div>
-
-            {/* Report CTA */}
-            <div className="flex items-center gap-3">
-              <Link
-                href="/lost-found/create"
-                id="report-item-btn"
-                className="btn-accent inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold shadow-md shadow-red-500/20"
-              >
-                <PlusCircle className="h-4 w-4" />
-                Report Item
-              </Link>
-            </div>
-          </div>
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-8">
+      {/* Title & Description */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Lost & Found Hub</h1>
+          <p className="mt-1 text-xs text-zinc-400 sm:text-sm">
+            Misplaced an item or picked up someone's belongings at City University? Search the live registry or file a report with photo verification.
+          </p>
         </div>
+
+        {/* Report CTA */}
+        <Link
+          href="/lost-found/create"
+          id="report-item-btn"
+          className="btn-accent inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold shadow-md shadow-red-500/20 shrink-0"
+        >
+          <PlusCircle className="h-4 w-4" />
+          Report Item
+        </Link>
       </div>
 
       {/* Main Container */}
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 space-y-6">
+      <div className="space-y-6">
         {/* Filter Bar */}
         <PostFilterBar
           search={search}

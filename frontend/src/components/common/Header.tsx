@@ -17,7 +17,10 @@ import {
   BookOpen,
   FolderOpen,
   PackageSearch,
+  HelpCircle,
+  ShieldAlert,
 } from 'lucide-react';
+import { getClubAbbreviation } from '@/lib/formatters';
 
 export default function Header() {
   const { user, loading, logout } = useAuth();
@@ -77,9 +80,21 @@ export default function Header() {
               </Link>
               <Link
                 href="/lost-found"
-                className="text-sm font-medium text-zinc-300 transition-colors duration-150 hover:text-white active:scale-95"
+                className="text-sm whitespace-nowrap font-medium text-zinc-300 transition-colors duration-150 hover:text-white active:scale-95"
               >
                 Lost & Found
+              </Link>
+              <Link
+                href="/helpdesk"
+                className="text-sm font-medium text-zinc-300 transition-colors duration-150 hover:text-white active:scale-95"
+              >
+                Helpdesk
+              </Link>
+              <Link
+                href="/complaints"
+                className="text-sm font-medium text-zinc-300 transition-colors duration-150 hover:text-white active:scale-95"
+              >
+                Complaints
               </Link>
             </nav>
           </div>
@@ -90,53 +105,45 @@ export default function Header() {
               <div className="h-8 w-20 animate-pulse rounded bg-zinc-800" />
             ) : user ? (
               <div className="flex items-center gap-2 sm:gap-3">
+                {user.role === 'club_admin' && (
+                  <span
+                    title={`Club: ${user.club_name || 'Assigned Club'}`}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-red-400 shadow-sm"
+                  >
+                    <Shield className="h-3.5 w-3.5 text-red-400 shrink-0" />
+                    <span>{getClubAbbreviation(user.club_name)}</span>
+                  </span>
+                )}
+
                 {user.role === 'club_admin' ? (
                   <Link
                     href="/event-dashboard"
-                    title="Admin Dashboard"
-                    className="flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
+                    title="Event Dashboard"
+                    className="hidden lg:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
                   >
                     <LayoutDashboard className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                    <span className="hidden sm:inline">Admin Dashboard</span>
-                    <span className="sm:hidden">Dashboard</span>
+                    Event Dashboard
+                  </Link>
+                ) : user.role === 'helpdesk_admin' ? (
+                  <Link
+                    href="/helpdesk-dashboard"
+                    title="Helpdesk Dashboard"
+                    className="hidden lg:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
+                  >
+                    <HelpCircle className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                    Helpdesk Dashboard
                   </Link>
                 ) : (
                   <Link
                     href="/my-events"
                     title="My Events"
-                    className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
+                    className="hidden lg:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
                   >
                     <Calendar className="h-3.5 w-3.5 text-red-500 shrink-0" />
                     My Events
                   </Link>
                 )}
 
-                <Link
-                  href="/my-resources"
-                  title="My Resources"
-                  className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
-                >
-                  <FolderOpen className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                  My Resources
-                </Link>
-
-                <Link
-                  href="/my-posts"
-                  title="My Posts"
-                  className="hidden sm:flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition-all duration-150 hover:border-zinc-700 hover:text-white active:scale-95 shrink-0"
-                >
-                  <PackageSearch className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                  My Posts
-                </Link>
-
-                {/* Profile - desktop only in header to prevent crowding on mobile */}
-                <Link
-                  href="/profile"
-                  className="hidden md:flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition-all duration-150 hover:bg-zinc-800 hover:text-white active:scale-95"
-                >
-                  <UserIcon className="h-3.5 w-3.5" />
-                  <span className="max-w-[120px] truncate">{user.full_name}</span>
-                </Link>
 
                 {/* Logout - desktop only in header */}
                 <button
@@ -168,7 +175,7 @@ export default function Header() {
             <button
               onClick={() => setSidebarOpen(true)}
               aria-label="Open Navigation Menu"
-              className="flex md:hidden rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-2 text-zinc-300 transition-all duration-150 hover:border-zinc-700 hover:bg-zinc-800 hover:text-white active:scale-95 cursor-pointer"
+              className="flex  rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-2 text-zinc-300 transition-all duration-150 hover:border-zinc-700 hover:bg-zinc-800 hover:text-white active:scale-95 cursor-pointer"
             >
               <Menu className="h-5 w-5" />
             </button>
@@ -178,7 +185,7 @@ export default function Header() {
 
       {/* Mobile Sidebar Overlay & Drawer */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-50 hidden">
+        <div className="fixed inset-0 z-50 ">
           {/* Backdrop blur */}
           <div
             className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
@@ -225,7 +232,12 @@ export default function Header() {
                       {user.role === 'club_admin' ? (
                         <>
                           <Shield className="h-3 w-3 text-red-400" />
-                          Club Admin
+                          Club Admin ({getClubAbbreviation(user.club_name)})
+                        </>
+                      ) : user.role === 'helpdesk_admin' ? (
+                        <>
+                          <HelpCircle className="h-3 w-3 text-red-400" />
+                          Helpdesk Admin
                         </>
                       ) : (
                         'Student'
@@ -282,6 +294,30 @@ export default function Header() {
                   <ChevronRight className="h-4 w-4 text-zinc-600" />
                 </Link>
 
+                <Link
+                  href="/helpdesk"
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-200 transition-all hover:bg-zinc-800/60 hover:text-white"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <HelpCircle className="h-4 w-4 text-red-500" />
+                    Smart Helpdesk
+                  </span>
+                  <ChevronRight className="h-4 w-4 text-zinc-600" />
+                </Link>
+
+                <Link
+                  href="/complaints"
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-200 transition-all hover:bg-zinc-800/60 hover:text-white"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <ShieldAlert className="h-4 w-4 text-red-500" />
+                    Complaints
+                  </span>
+                  <ChevronRight className="h-4 w-4 text-zinc-600" />
+                </Link>
+
                 {user?.role === 'club_admin' && (
                   <Link
                     href="/event-dashboard"
@@ -290,13 +326,27 @@ export default function Header() {
                   >
                     <span className="flex items-center gap-2.5">
                       <LayoutDashboard className="h-4 w-4 text-red-400" />
-                      Admin Dashboard
+                      Event Dashboard
                     </span>
                     <ChevronRight className="h-4 w-4 text-red-400" />
                   </Link>
                 )}
 
-                {user && user.role !== 'club_admin' && (
+                {user?.role === 'helpdesk_admin' && (
+                  <Link
+                    href="/helpdesk-dashboard"
+                    onClick={() => setSidebarOpen(false)}
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-red-300 bg-red-950/20 border border-red-900/30 transition-all hover:bg-red-950/40"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <HelpCircle className="h-4 w-4 text-red-400" />
+                      Helpdesk Dashboard
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-red-400" />
+                  </Link>
+                )}
+
+                {user && user.role !== 'club_admin' && user.role !== 'helpdesk_admin' && (
                   <Link
                     href="/my-events"
                     onClick={() => setSidebarOpen(false)}

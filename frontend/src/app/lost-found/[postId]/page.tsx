@@ -47,6 +47,7 @@ export default function PostDetailsPage({ params }: PageProps) {
   const [isResolveModalOpen, setIsResolveModalOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     async function loadPost() {
       setLoading(true);
       try {
@@ -75,8 +76,8 @@ export default function PostDetailsPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#09090b]">
-        <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
       </div>
     );
   }

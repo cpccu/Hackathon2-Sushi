@@ -45,6 +45,8 @@ export default function LoginPage() {
 
       if (res.user?.role === 'club_admin') {
         router.push('/event-dashboard');
+      } else if (res.user?.role === 'helpdesk_admin') {
+        router.push('/helpdesk-dashboard');
       } else {
         router.push('/events');
       }
@@ -78,22 +80,64 @@ export default function LoginPage() {
 
         {/* Quick Demo Credentials */}
         <div className="rounded-lg border border-zinc-800/80 bg-zinc-950/60 p-3 text-xs text-zinc-400">
-          <p className="font-medium text-zinc-300 mb-2">Quick Demo Accounts:</p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => fillDemo('sizan@cityuniversity.edu')}
-              className="flex-1 rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90"
-            >
-              Sizan Molla (Student)
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemo('admin@cpcamp.edu')}
-              className="flex-1 rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90"
-            >
-              CP Camp Admin
-            </button>
+          <p className="font-medium text-zinc-300 mb-2">Quick Demo Accounts (password: password123):</p>
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => fillDemo('sizan@cityuniversity.edu')}
+                className="rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90 truncate text-left"
+                title="Sizan Molla (Student)"
+              >
+                🎓 Sizan Molla <span className="text-zinc-500 text-[10px]">(Student)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemo('nusrat@cityuniversity.edu')}
+                className="rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90 truncate text-left"
+                title="Nusrat Jahan (Student)"
+              >
+                🎓 Nusrat Jahan <span className="text-zinc-500 text-[10px]">(Student)</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => fillDemo('admin@cpcamp.edu')}
+                className="rounded border border-blue-900/40 bg-blue-950/20 py-1.5 px-2 text-[11px] text-blue-300 transition-all duration-150 hover:bg-blue-950/40 active:scale-90 truncate text-left"
+                title="CP Camp Admin (CPCCU)"
+              >
+                🛡️ CP Camp Admin <span className="text-blue-400/70 text-[10px]">(CPCCU)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemo('admin@computerclub.edu')}
+                className="rounded border border-blue-900/40 bg-blue-950/20 py-1.5 px-2 text-[11px] text-blue-300 transition-all duration-150 hover:bg-blue-950/40 active:scale-90 truncate text-left"
+                title="Tanvir Ahmed (CCCU Admin)"
+              >
+                🛡️ Tanvir Ahmed <span className="text-blue-400/70 text-[10px]">(CCCU)</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => fillDemo('helpdesk@cityuniversity.edu')}
+                className="rounded border border-red-900/40 bg-red-950/20 py-1.5 px-2 text-[11px] text-red-300 transition-all duration-150 hover:bg-red-950/40 active:scale-90 truncate text-left"
+                title="Helpdesk Admin 1"
+              >
+                🎧 CU Helpdesk <span className="text-red-400/70 text-[10px]">(Admin)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemo('support@cityuniversity.edu')}
+                className="rounded border border-red-900/40 bg-red-950/20 py-1.5 px-2 text-[11px] text-red-300 transition-all duration-150 hover:bg-red-950/40 active:scale-90 truncate text-left"
+                title="Rafiqul Islam (Helpdesk Admin 2)"
+              >
+                🎧 Rafiqul Islam <span className="text-red-400/70 text-[10px]">(Admin)</span>
+              </button>
+            </div>
           </div>
         </div>
 

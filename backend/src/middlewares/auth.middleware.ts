@@ -11,7 +11,7 @@ interface SessionUserRow {
   id: string;
   full_name: string;
   email: string;
-  role: 'student' | 'club_admin';
+  role: 'student' | 'club_admin' | 'helpdesk_admin';
   student_id: string | null;
   department: string | null;
   batch: string | null;

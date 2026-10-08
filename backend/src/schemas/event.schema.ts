@@ -67,6 +67,8 @@ export const updateEventSchema = z.object({
   event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Event date must be YYYY-MM-DD').optional(),
   start_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/, 'Start time must be HH:mm or HH:mm:ss').optional(),
   duration_minutes: z.coerce.number().int().positive('Duration must be greater than 0').optional(),
+  registration_start: z.string().datetime({ offset: true }).or(z.string().min(10)).optional(),
+  registration_deadline: z.string().datetime({ offset: true }).or(z.string().min(10)).optional(),
 });
 
 export type ListEventsQuery = z.infer<typeof listEventsQuerySchema>;

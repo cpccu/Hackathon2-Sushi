@@ -418,9 +418,9 @@ export async function updateClubEvent(
   eventId: string,
   input: UpdateEventInput
 ) {
-  // Verify event belongs to this club
+  // Verify event belongs to this club and fetch current dates
   const checkRes = await query(
-    `SELECT id, club_id FROM events WHERE id = $1 LIMIT 1;`,
+    `SELECT id, club_id, name, description, event_date::text as event_date, start_time::text as start_time, duration_minutes, registration_start, registration_deadline FROM events WHERE id = $1 LIMIT 1;`,
     [eventId]
   );
 
@@ -428,11 +428,57 @@ export async function updateClubEvent(
     throw new NotFoundError('Event not found');
   }
 
-  if (checkRes.rows[0].club_id !== clubId) {
+  const existingEvent = checkRes.rows[0];
+
+  if (existingEvent.club_id !== clubId) {
     throw new ForbiddenError('You are not authorized to manage events for this club');
   }
 
-  // Requirements: Only these fields are editable: Name, Description, Date, Start Time, Duration
+  const effectiveEventDate = input.event_date ?? existingEvent.event_date;
+  const effectiveStartTime = input.start_time ?? existingEvent.start_time;
+  const effectiveRegStart = input.registration_start ?? existingEvent.registration_start;
+  const effectiveRegDeadline = input.registration_deadline ?? existingEvent.registration_deadline;
+
+  // Validation 1: Event date cannot be in the past when updating event date
+  if (input.event_date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedEventDate = new Date(input.event_date);
+    if (selectedEventDate < today) {
+      throw new BadRequestError('Event date cannot be in the past');
+    }
+  }
+
+  // Validation 2: Registration dates & event date/time relation
+  if (
+    input.event_date ||
+    input.start_time ||
+    input.registration_start ||
+    input.registration_deadline
+  ) {
+    const cleanTime = (effectiveStartTime || '00:00').slice(0, 5);
+    const eventDatetime = new Date(`${effectiveEventDate}T${cleanTime}:00`);
+    const regStart = new Date(effectiveRegStart);
+    const regDeadline = new Date(effectiveRegDeadline);
+
+    if (isNaN(regStart.getTime()) || isNaN(regDeadline.getTime())) {
+      throw new BadRequestError('Invalid registration start or deadline date');
+    }
+
+    if (regDeadline <= regStart) {
+      throw new BadRequestError('Registration deadline must be after registration start');
+    }
+
+    if (regStart >= eventDatetime) {
+      throw new BadRequestError('Registration start cannot be after the event date and start time');
+    }
+
+    if (regDeadline > eventDatetime) {
+      throw new BadRequestError('Registration deadline cannot be after the event date and start time');
+    }
+  }
+
+  // Editable fields: Name, Description, Date, Start Time, Duration, Registration Start, Registration Deadline
   const fields: string[] = [];
   const values: any[] = [];
   let paramIdx = 1;
@@ -457,6 +503,14 @@ export async function updateClubEvent(
     fields.push(`duration_minutes = $${paramIdx++}`);
     values.push(input.duration_minutes);
   }
+  if (input.registration_start !== undefined) {
+    fields.push(`registration_start = $${paramIdx++}`);
+    values.push(input.registration_start);
+  }
+  if (input.registration_deadline !== undefined) {
+    fields.push(`registration_deadline = $${paramIdx++}`);
+    values.push(input.registration_deadline);
+  }
 
   if (fields.length === 0) {
     throw new BadRequestError('No editable fields provided');
@@ -469,7 +523,7 @@ export async function updateClubEvent(
     UPDATE events
     SET ${fields.join(', ')}
     WHERE id = $${paramIdx}
-    RETURNING id, name, description, event_date::text as event_date, start_time::text as start_time, duration_minutes;
+    RETURNING id, name, description, event_date::text as event_date, start_time::text as start_time, duration_minutes, registration_start, registration_deadline;
   `;
 
   const updatedRes = await query(updateSql, values);

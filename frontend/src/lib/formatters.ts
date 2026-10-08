@@ -114,3 +114,26 @@ export function formatFileSize(bytes: number | null | undefined): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+/**
+ * Generate standard abbreviation / tag for a club name
+ * e.g., "Computer Club City University" -> "CCCU"
+ *       "Competitive Programming Camp City University" -> "CPCCU"
+ *       "Sports Club City University" -> "SCCU"
+ */
+export function getClubAbbreviation(clubName?: string | null): string {
+  if (!clubName) return 'Club Admin';
+  const name = clubName.trim();
+  const lower = name.toLowerCase();
+
+  if (lower.includes('competitive programming')) return 'CPCCU';
+  if (lower.includes('computer club')) return 'CCCU';
+  if (lower.includes('sports club')) return 'SCCU';
+
+  const words = name.replace(/[^a-zA-Z\s]/g, '').split(/\s+/).filter(Boolean);
+  if (words.length > 1) {
+    return words.map((w) => w[0].toUpperCase()).join('');
+  }
+  return name.slice(0, 6).toUpperCase();
+}
+
+

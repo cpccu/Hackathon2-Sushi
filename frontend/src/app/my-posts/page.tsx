@@ -81,8 +81,8 @@ export default function MyPostsPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#09090b]">
-        <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
       </div>
     );
   }
@@ -294,13 +294,15 @@ export default function MyPostsPage() {
                     </Link>
 
                     {/* Edit Button */}
-                    <Link
-                      href={`/lost-found/${post.id}/edit`}
-                      className="btn-secondary text-xs px-3 py-1.5 inline-flex items-center gap-1.5"
-                    >
-                      <Edit3 className="h-3.5 w-3.5" />
-                      Edit
-                    </Link>
+                    {!isResolved && (
+                      <Link
+                        href={`/lost-found/${post.id}/edit`}
+                        className="btn-secondary text-xs px-3 py-1.5 inline-flex items-center gap-1.5"
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                        Edit
+                      </Link>
+                    )}
 
                     {/* Resolve Button */}
                     {!isResolved && (

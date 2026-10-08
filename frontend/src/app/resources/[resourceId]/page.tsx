@@ -82,6 +82,7 @@ export default function ResourceDetailPage({
 
   // Fetch resource detail
   useEffect(() => {
+    window.scrollTo(0, 0);
     async function loadResource() {
       try {
         setLoading(true);
@@ -188,8 +189,8 @@ export default function ResourceDetailPage({
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
       </div>
     );
   }
@@ -321,10 +322,15 @@ export default function ResourceDetailPage({
             </div>
             <div>
               <p className="font-medium text-white">
-                Uploaded by {resource.uploader_name}
+                Provided by {resource.uploader_name}
                 {resource.uploader_batch && (
-                  <span className="text-zinc-500 ml-1">
+                  <span className="text-zinc-400 ml-1">
                     (Batch {resource.uploader_batch})
+                  </span>
+                )}
+                {resource.uploader_department && (
+                  <span className="text-zinc-400 ml-1.5 font-normal">
+                    &bull; {resource.uploader_department}
                   </span>
                 )}
               </p>

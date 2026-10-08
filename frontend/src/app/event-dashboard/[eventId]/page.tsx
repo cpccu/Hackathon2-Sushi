@@ -47,13 +47,27 @@ export default function ManageEventPage({
   const [saving, setSaving] = useState(false);
 
   // Editable fields per specifications:
-  // "Only these fields are editable: Name, Description, Date, Start Time, Duration"
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [durationHours, setDurationHours] = useState(2);
+  const [regStart, setRegStart] = useState('');
+  const [regDeadline, setRegDeadline] = useState('');
   const [eventStatus, setEventStatus] = useState<'upcoming' | 'ongoing' | 'finished' | 'cancelled'>('upcoming');
+
+  // Helper to convert ISO string to datetime-local input format (YYYY-MM-DDTHH:mm)
+  const formatToDatetimeLocal = (isoString?: string | null) => {
+    if (!isoString) return '';
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return '';
+      const pad = (n: number) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    } catch {
+      return '';
+    }
+  };
 
   // Participants data
   const [participantsData, setParticipantsData] = useState<EventParticipantsResponse | null>(null);
@@ -76,6 +90,8 @@ export default function ManageEventPage({
         setEventDate(eventRes.data.event_date);
         setStartTime(eventRes.data.start_time?.slice(0, 5) || '');
         setDurationHours(eventRes.data.duration_minutes / 60);
+        setRegStart(formatToDatetimeLocal(eventRes.data.registration_start));
+        setRegDeadline(formatToDatetimeLocal(eventRes.data.registration_deadline));
         setEventStatus(eventRes.data.status ?? 'upcoming');
 
         // Load participants
@@ -111,6 +127,40 @@ export default function ManageEventPage({
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // ── Frontend validations matching event creation rules ──
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedEventDate = new Date(eventDate);
+    if (selectedEventDate < today) {
+      toast.error('Event date cannot be in the past.');
+      return;
+    }
+
+    if (!regStart || !regDeadline) {
+      toast.error('Registration start and registration deadline are required.');
+      return;
+    }
+
+    const eventDatetimeMs = new Date(`${eventDate}T${startTime}`).getTime();
+    const regStartMs = new Date(regStart).getTime();
+    const regDeadlineMs = new Date(regDeadline).getTime();
+
+    if (regDeadlineMs <= regStartMs) {
+      toast.error('Registration deadline must be after the registration start time.');
+      return;
+    }
+
+    if (regStartMs >= eventDatetimeMs) {
+      toast.error('Registration start cannot be after the event date & time.');
+      return;
+    }
+
+    if (regDeadlineMs > eventDatetimeMs) {
+      toast.error('Registration deadline cannot be after the event date & time.');
+      return;
+    }
+
     setSaving(true);
     try {
       await apiFetch(`/club-admin/events/${eventId}`, {
@@ -121,6 +171,8 @@ export default function ManageEventPage({
           event_date: eventDate,
           start_time: startTime,
           duration_minutes: Math.round(durationHours * 60),
+          registration_start: new Date(regStart).toISOString(),
+          registration_deadline: new Date(regDeadline).toISOString(),
         }),
       });
 
@@ -175,7 +227,7 @@ export default function ManageEventPage({
           <div className="border-b border-zinc-800 pb-4 mb-6">
             <h2 className="text-base font-semibold text-white">Editable Event Details</h2>
             <p className="text-xs text-zinc-400">
-              Per policy, only name, description, date, start time, and duration are modifiable once published.
+              Per policy, name, description, date, start time, duration, and registration dates are modifiable while the event is upcoming.
             </p>
           </div>
 
@@ -237,6 +289,41 @@ export default function ManageEventPage({
                   onChange={(e) => setDurationHours(Number(e.target.value))}
                   className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3.5 py-2 text-xs text-white focus:border-red-500 focus:outline-none"
                 />
+              </div>
+            </div>
+
+            {/* Registration Schedule Fields */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-2 border-t border-zinc-800/60">
+              <div>
+                <label className="block text-xs font-medium text-zinc-300">
+                  Registration Opens (Date & Time)
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={regStart}
+                  onChange={(e) => setRegStart(e.target.value)}
+                  className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-xs text-white [color-scheme:dark] focus:border-red-500 focus:outline-none"
+                />
+                <p className="mt-1 text-[11px] text-zinc-500">
+                  When students can start registering for this event.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-zinc-300">
+                  Registration Deadline / Close (Date & Time)
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={regDeadline}
+                  onChange={(e) => setRegDeadline(e.target.value)}
+                  className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-xs text-white [color-scheme:dark] focus:border-red-500 focus:outline-none"
+                />
+                <p className="mt-1 text-[11px] text-zinc-500">
+                  Must be before the event date & time.
+                </p>
               </div>
             </div>
 
@@ -303,6 +390,23 @@ export default function ManageEventPage({
                 <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Duration</p>
                 <p className="mt-1 text-xs font-medium text-white">
                   {formatDurationHours(durationHours * 60)}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-2 border-t border-zinc-800/60">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Registration Opens</p>
+                <p className="mt-1 text-xs font-medium text-white flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                  {regStart ? new Date(regStart).toLocaleString() : 'N/A'}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Registration Closes</p>
+                <p className="mt-1 text-xs font-medium text-white flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                  {regDeadline ? new Date(regDeadline).toLocaleString() : 'N/A'}
                 </p>
               </div>
             </div>
