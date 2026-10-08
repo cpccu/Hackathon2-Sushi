@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+:root {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #121214;
+  --card-border: #27272a;
+  --muted: #71717a;
+  --accent-red: #ef4444;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* Custom button classes adhering to prompt design:
+   "every button should have active:scale-90 for the click animation....animations should have duration 150 to 200 to feel smooth yet snappy...I dont need any big snimation just subtle ones...."
+*/
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f4f4f5;
+  color: #09090b;
+  transition: all 100ms ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #ffffff;
+}
+
+.btn-primary:active {
+  transform: scale(0.9);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #18181b;
+  color: #e4e4e7;
+  border: 1px solid #27272a;
+  transition: all 150ms ease-in-out;
+}
+
+.btn-secondary:hover {
+  background-color: #27272a;
+  color: #ffffff;
+}
+
+.btn-secondary:active {
+  transform: scale(0.9);
+}
+
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #dc2626;
+  color: #ffffff;
+  transition: all 150ms ease-in-out;
+  cursor: pointer;
+}
+
+.btn-accent:hover {
+  background-color: #ef4444;
+}
+
+.btn-accent:active {
+  transform: scale(0.9);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #a1a1aa;
+  transition: all 150ms ease-in-out;
+}
+
+.btn-ghost:hover {
+  color: #ffffff;
+  background-color: #18181b;
+}
+
+.btn-ghost:active {
+  transform: scale(0.9);
+}
+
+select {
+  cursor: pointer;
+}
+
+/* ——— Input Field Component ——— */
+.input-field {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #27272a;
+  background-color: #09090b;
+  color: #f4f4f5;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+}
+
+.input-field::placeholder {
+  color: #52525b;
+}
+
+.input-field:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.input-field:hover:not(:focus) {
+  border-color: #3f3f46;
+}
+
+/* Ensure selects with input-field fill properly */
+select.input-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Textarea specifics */
+textarea.input-field {
+  resize: vertical;
+  min-height: 5rem;
+}
+
+/* ——— Scrollbar Utility ——— */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+}
