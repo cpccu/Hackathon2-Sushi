@@ -2,10 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import { env } from '../config/env.js';
 import * as authService from '../services/auth.service.js';
 
+const isProd = env.NODE_ENV === 'production';
+
 const cookieOptions = {
   httpOnly: true,
-  secure: env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
   maxAge: env.SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
   path: '/',
 };
@@ -44,7 +46,12 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
     if (token) {
       await authService.destroySession(token);
     }
-    res.clearCookie(env.COOKIE_NAME, { path: '/' });
+    res.clearCookie(env.COOKIE_NAME, {
+      path: '/',
+      httpOnly: true,
+      secure: isProd,
+      sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+    });
     res.status(200).json({
       success: true,
       message: 'Logged out successfully',

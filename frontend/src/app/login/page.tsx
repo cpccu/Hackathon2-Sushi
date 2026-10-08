@@ -26,7 +26,6 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -57,11 +56,6 @@ export default function LoginPage() {
     }
   };
 
-  const fillDemo = (email: string) => {
-    setValue('email', email);
-    setValue('password', 'password123');
-  };
-
   return (
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 rounded-2xl border border-zinc-800 bg-[#121214] p-8 shadow-2xl">
@@ -76,69 +70,6 @@ export default function LoginPage() {
               create a student profile
             </Link>
           </p>
-        </div>
-
-        {/* Quick Demo Credentials */}
-        <div className="rounded-lg border border-zinc-800/80 bg-zinc-950/60 p-3 text-xs text-zinc-400">
-          <p className="font-medium text-zinc-300 mb-2">Quick Demo Accounts (password: password123):</p>
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemo('sizan@cityuniversity.edu')}
-                className="rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90 truncate text-left"
-                title="Sizan Molla (Student)"
-              >
-                🎓 Sizan Molla <span className="text-zinc-500 text-[10px]">(Student)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemo('nusrat@cityuniversity.edu')}
-                className="rounded border border-zinc-800 bg-zinc-900 py-1.5 px-2 text-[11px] text-zinc-300 transition-all duration-150 hover:bg-zinc-800 active:scale-90 truncate text-left"
-                title="Nusrat Jahan (Student)"
-              >
-                🎓 Nusrat Jahan <span className="text-zinc-500 text-[10px]">(Student)</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemo('admin@cpcamp.edu')}
-                className="rounded border border-blue-900/40 bg-blue-950/20 py-1.5 px-2 text-[11px] text-blue-300 transition-all duration-150 hover:bg-blue-950/40 active:scale-90 truncate text-left"
-                title="CP Camp Admin (CPCCU)"
-              >
-                🛡️ CP Camp Admin <span className="text-blue-400/70 text-[10px]">(CPCCU)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemo('admin@computerclub.edu')}
-                className="rounded border border-blue-900/40 bg-blue-950/20 py-1.5 px-2 text-[11px] text-blue-300 transition-all duration-150 hover:bg-blue-950/40 active:scale-90 truncate text-left"
-                title="Tanvir Ahmed (CCCU Admin)"
-              >
-                🛡️ Tanvir Ahmed <span className="text-blue-400/70 text-[10px]">(CCCU)</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemo('helpdesk@cityuniversity.edu')}
-                className="rounded border border-red-900/40 bg-red-950/20 py-1.5 px-2 text-[11px] text-red-300 transition-all duration-150 hover:bg-red-950/40 active:scale-90 truncate text-left"
-                title="Helpdesk Admin 1"
-              >
-                🎧 CU Helpdesk <span className="text-red-400/70 text-[10px]">(Admin)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemo('support@cityuniversity.edu')}
-                className="rounded border border-red-900/40 bg-red-950/20 py-1.5 px-2 text-[11px] text-red-300 transition-all duration-150 hover:bg-red-950/40 active:scale-90 truncate text-left"
-                title="Rafiqul Islam (Helpdesk Admin 2)"
-              >
-                🎧 Rafiqul Islam <span className="text-red-400/70 text-[10px]">(Admin)</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">

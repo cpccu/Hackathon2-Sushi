@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 
+const backendBase =
+  process.env.BACKEND_URL ||
+  (process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")
+    : "http://localhost:5000");
+
 const nextConfig: NextConfig = {
   turbopack: {
     rules: {
@@ -13,7 +19,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:5000/api/:path*",
+        destination: `${backendBase}/api/:path*`,
       },
     ];
   },

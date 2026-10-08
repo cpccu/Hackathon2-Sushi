@@ -11,13 +11,35 @@ import { NotFoundError } from './utils/errors.js';
 export function createApp(): Express {
   const app = express();
 
+  // Trust proxy (Required for Render, reverse proxies, rate limiting & secure cookies)
+  app.set('trust proxy', 1);
+
   // 1. Security Headers
   app.use(helmet());
 
   // 2. CORS configuration (credentials: true for HttpOnly cookies)
+  const allowedOrigins = [
+    env.FRONTEND_URL,
+    env.FRONTEND_URL.replace(/\/$/, ''),
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+  ];
+
   app.use(
     cors({
-      origin: [env.FRONTEND_URL, 'http://localhost:3000', 'http://127.0.0.1:3000'],
+      origin: (origin, callback) => {
+        // Allow server-to-server, curl, health checks, or mobile
+        if (!origin) return callback(null, true);
+        if (
+          allowedOrigins.includes(origin) ||
+          origin.endsWith('.vercel.app') ||
+          origin.includes('localhost') ||
+          origin.includes('127.0.0.1')
+        ) {
+          return callback(null, true);
+        }
+        return callback(null, true);
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
