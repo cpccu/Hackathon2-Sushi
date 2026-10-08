@@ -7,8 +7,11 @@ import { AuthProvider } from '../context/AuthContext';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'campusOS — Campus Event Hub',
-  description: 'Minimalist campus event & club administration platform. Fast registrations, eligibility check, and instant QR check-ins.',
+  title: {
+    default: 'campusOS — City University',
+    template: '%s | campusOS',
+  },
+  description: 'City University Campus Events, Information, and more.',
 };
 
 export default function RootLayout({

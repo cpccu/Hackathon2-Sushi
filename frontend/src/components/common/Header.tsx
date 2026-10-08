@@ -164,7 +164,7 @@ export default function Header() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="hidden sm:inline-flex rounded-md border border-zinc-800 bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-all duration-150 hover:bg-zinc-200 active:scale-95"
+                  className="hidden sm:inline-flex rounded-md border border-zinc-800 bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition-all duration-150 hover:bg-zinc-200 active:scale-95 whitespace-nowrap"
                 >
                   Sign Up
                 </Link>
